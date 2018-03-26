@@ -1,0 +1,14 @@
+<div class="animated fadeIn">
+  <ul>
+    <li *ngFor="let msg of messages; let i = index">
+      {{i}} {{item}}
+    </li>
+  </ul>
+
+  <ag-grid-angular #agGrid
+    class="ag-theme-balham main-grid"
+    [gridOptions]="gridOptions"
+    [rowData]="rowData"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</div>
