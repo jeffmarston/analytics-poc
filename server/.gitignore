@@ -1,13 +1,14 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-**/obj/**
+obj/
+bin/
 
 # dependencies
 packages/
 
 # IDEs and editors
-
+.vs/
 
 # misc
 
