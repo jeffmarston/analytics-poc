@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Wask.Lib</name>
+    </assembly>
+    <members>
+        <member name="T:Wask.Lib.SignalR.ChannelEvent">
+            <summary>
+            A generic object to represent a broadcasted event in our SignalR hubs
+            </summary>
+        </member>
+        <member name="P:Wask.Lib.SignalR.ChannelEvent.Name">
+            <summary>
+            The name of the event
+            </summary>
+        </member>
+        <member name="P:Wask.Lib.SignalR.ChannelEvent.ChannelName">
+            <summary>
+            The name of the channel the event is associated with
+            </summary>
+        </member>
+        <member name="P:Wask.Lib.SignalR.ChannelEvent.Timestamp">
+            <summary>
+            The date/time that the event was created
+            </summary>
+        </member>
+        <member name="P:Wask.Lib.SignalR.ChannelEvent.Data">
+            <summary>
+            The data associated with the event
+            </summary>
+        </member>
+        <member name="P:Wask.Lib.SignalR.ChannelEvent.Json">
+            <summary>
+            A JSON representation of the event data. This is set automatically
+            when the Data property is assigned.
+            </summary>
+        </member>
+        <member name="T:Wask.Lib.SignalR.EventHub">
+            <summary>
+            A signalR hub that provides channel-based event broadcasting
+            that clients can subscribe to
+            </summary>
+        </member>
+        <member name="T:Wask.Lib.SignalR.AnalyticsController">
+            <summary>
+            Service Info OWIN Controller
+            </summary>
+        </member>
+        <member name="M:Wask.Lib.SignalR.AnalyticsController.CreateView(System.String)">
+            <summary>
+            Create new view
+            </summary>
+            <response code="200">Returns ID of the new view</response>
+        </member>
+        <member name="M:Wask.Lib.SignalR.AnalyticsController.GetColumns">
+            <summary>
+            Get all columns
+            </summary>
+            <remarks>
+            blah blah
+             
+                GET /columns
+            
+            </remarks>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+        </member>
+    </members>
+</doc>

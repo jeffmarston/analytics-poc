@@ -8,7 +8,10 @@ export class RestapiService {
 
   public GetColumnsAsync(): any {
     return this.http.get('http://localhost:9000/serviceInfo/columns');
-   // return this.http.get('http://localhost:6700/columns');
+  }
+
+  public GetViewAsync(): any {
+    return this.http.post('http://localhost:9000/view/create?parameter=nope', { parameter : "Unused for now" });
   }
 
 }

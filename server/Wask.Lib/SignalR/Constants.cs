@@ -4,6 +4,6 @@ namespace Wask.Lib.SignalR
     class Constants
     {
         public const string AdminChannel = "admin";
-        public const string ViewChannel = "serviceInfo";
+        public const string ViewChannel = "view";
     }
 }

@@ -9,6 +9,12 @@
     class="ag-theme-balham main-grid"
     [gridOptions]="gridOptions"
     [rowData]="rowData"
-    (gridReady)="onGridReady($event)">
+    (gridReady)="onGridReady($event)"
+    [enableSorting]="true"
+    [enableFilter]="true"
+    [enableColResize]="true"
+    
+    [showToolPanel]="true"
+    >
   </ag-grid-angular>
 </div>

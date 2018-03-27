@@ -31,20 +31,21 @@ export class AnalyticsComponent implements OnInit {
 
     // Rest
     this.columnDefs = [];
-    this.restapi.GetColumnsAsync().subscribe(columns => {
-      columns.forEach(colName => {
+    this.rowData = [];
+    this.restapi.GetViewAsync().subscribe(view => {
+
+      view.columns.forEach(colName => {
         this.columnDefs.push({
           headerName: colName,
           field: colName,
-          width: 100
+          width: 100,
+          filter: "agTextColumnFilter"
         });
       });
 
-      // this.rowData = [
-      //   { Symbol: 5, Amount: 10 },
-      //   { Symbol: 10, Amount: 15 },
-      //   { Symbol: 15, Amount: 20 }
-      // ];
+      view.rows.forEach(row => {
+        this.addRowToGrid(row);        
+      });
 
       this.gridOptions.api.setColumnDefs(this.columnDefs);
 
@@ -59,17 +60,21 @@ export class AnalyticsComponent implements OnInit {
 
         let onDeleteRow$ = new BroadcastEventListener('deleteRow');
         this.connection.listen(onDeleteRow$);
-        onDeleteRow$.subscribe((rowKey) => this.deleteRowFromGrid(rowKey));
+        onDeleteRow$.subscribe((row) => this.deleteRowFromGrid(row));
+
+        let onUpdateRow$ = new BroadcastEventListener('updateRow');
+        this.connection.listen(onUpdateRow$);
+        onUpdateRow$.subscribe((row) => this.updateRowInGrid(row));
       });
     });
 
   }
 
   private addRowToGrid(row) {
-    let rowItem = {};
+    let rowItem = { rowKey: row.key };
     for (let i = 0; i < this.columnDefs.length; i++) {
       let propname = this.columnDefs[i].field;
-      rowItem[propname] = row[i];
+      rowItem[propname] = row.values[i];
     }
 
     var res = this.gridApi.updateRowData({
@@ -79,8 +84,30 @@ export class AnalyticsComponent implements OnInit {
   }
 
 
-  private deleteRowFromGrid(rowKey) {
-    //var res = this.gridApi.removeItems();
+  private updateRowInGrid(newRow) {
+    var itemsToUpdate = [];
+    this.gridOptions.api.forEachNodeAfterFilterAndSort((rowNode) => {
+      if (rowNode.data.rowKey == newRow.key) {
+        
+        // Replace current values with new ones
+        for (let i = 0; i < this.columnDefs.length; i++) {
+          let propname = this.columnDefs[i].field;
+          rowNode.data[propname] = newRow.values[i];
+        }
+        itemsToUpdate.push(rowNode.data);
+      }
+    });
+    var res = this.gridOptions.api.updateRowData({ update: itemsToUpdate });
+  }
+
+  private deleteRowFromGrid(row) {
+    var itemsToDelete = [];
+    this.gridOptions.api.forEachNodeAfterFilterAndSort((rowNode) => {
+      if (rowNode.data.rowKey == row.key) {
+        itemsToDelete.push(rowNode.data);
+      }
+    });
+    var res = this.gridOptions.api.updateRowData({ remove: itemsToDelete });
   }
 
   onGridReady(params) {

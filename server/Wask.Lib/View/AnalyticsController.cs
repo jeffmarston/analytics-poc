@@ -8,8 +8,20 @@ namespace Wask.Lib.SignalR
     /// Service Info OWIN Controller
     /// </summary>
     [RoutePrefix(Constants.ViewChannel)]
-    public class ServiceStatusController : ApiController
-    {        
+    public class AnalyticsController : ApiController
+    {
+        /// <summary>
+        /// Create new view
+        /// </summary>
+        /// <response code="200">Returns ID of the new view</response>
+        [Route("create")]
+        [HttpPost]
+        public ViewModel CreateView(string parameter)
+        {
+            DummyPublisher.Instance.Init();
+            return DummyPublisher.Instance.CreateView();
+        }
+
         /// <summary>
         /// Get all columns
         /// </summary>
@@ -23,12 +35,10 @@ namespace Wask.Lib.SignalR
         /// <response code="400">If the item is null</response>
         [Route("columns")]
         [HttpGet]
-        public IEnumerable<string> GetServices()
-        {
-            DummyPublisher.Instance.Init(); 
-            List<string> columns = new List<string>() { "Symbol", "Amount", "Sector" };
+        public IEnumerable<string> GetColumns() {
+            var columns = DummyPublisher.Instance.GetColumns();
             return columns;
         }
-        
+
     }
 }
