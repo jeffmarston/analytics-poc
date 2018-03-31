@@ -27,7 +27,7 @@ namespace Wask.Lib.Model
 
         public ViewModel CreateView()
         {
-            _tickTimer = new Timer(VolumeTick, null, 0, 50);
+            _tickTimer = new Timer(VolumeTick, null, 0, 500);
             _newRowTimer = new Timer(AddRow, null, 0, 8000);
             _deleteRowTimer = new Timer(DeleteRow, null, 10000, 10000);
 
@@ -45,8 +45,8 @@ namespace Wask.Lib.Model
             try
             {
                 Console.Write(".");
-                RowModel affectedRow = _view.Tick();
-                _context.Clients.All.updateRow(affectedRow);
+                var affectedRows = _view.Tick();
+                _context.Clients.All.updateRows(affectedRows);
             }
             catch (Exception e)
             {

@@ -62,9 +62,9 @@ export class AnalyticsComponent implements OnInit {
         this.connection.listen(onDeleteRow$);
         onDeleteRow$.subscribe((row) => this.deleteRowFromGrid(row));
 
-        let onUpdateRow$ = new BroadcastEventListener('updateRow');
+        let onUpdateRow$ = new BroadcastEventListener('updateRows');
         this.connection.listen(onUpdateRow$);
-        onUpdateRow$.subscribe((row) => this.updateRowInGrid(row));
+        onUpdateRow$.subscribe((rows) => this.updateRowsInGrid(rows));
       });
     });
 
@@ -84,18 +84,20 @@ export class AnalyticsComponent implements OnInit {
   }
 
 
-  private updateRowInGrid(newRow) {
+  private updateRowsInGrid(changedRows) {
     var itemsToUpdate = [];
     this.gridOptions.api.forEachNodeAfterFilterAndSort((rowNode) => {
-      if (rowNode.data.rowKey == newRow.key) {
+      changedRows.forEach(changedRow => {
+        if (rowNode.data.rowKey == changedRow.key) {
         
-        // Replace current values with new ones
-        for (let i = 0; i < this.columnDefs.length; i++) {
-          let propname = this.columnDefs[i].field;
-          rowNode.data[propname] = newRow.values[i];
+          // Replace current values with new ones
+          for (let i = 0; i < this.columnDefs.length; i++) {
+            let propname = this.columnDefs[i].field;
+            rowNode.data[propname] = changedRow.values[i];
+          }
+          itemsToUpdate.push(rowNode.data);
         }
-        itemsToUpdate.push(rowNode.data);
-      }
+      });
     });
     var res = this.gridOptions.api.updateRowData({ update: itemsToUpdate });
   }

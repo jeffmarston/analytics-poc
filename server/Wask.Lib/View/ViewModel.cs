@@ -6,6 +6,9 @@ namespace Wask.Lib.Model
 {
     public class ViewModel
     {
+        private Random _random = new Random();
+        private List<string> _secMaster = new List<string>();
+
         public List<string> Columns { get; }
         public ICollection<RowModel> Rows
         {
@@ -19,6 +22,11 @@ namespace Wask.Lib.Model
         {
             Columns = new List<string>();
             RowLookup = new ConcurrentDictionary<string, RowModel>();
+            for (int i=0; i<20; i++)
+            {
+                _secMaster.Add(RandomSymbol());
+            }
+            Console.WriteLine("Generated SecMaster: "+string.Join(", ", _secMaster.ToArray()));
             Create();
         }
 
@@ -26,29 +34,61 @@ namespace Wask.Lib.Model
         {
             Columns.Add("Symbol");
             Columns.Add("Volume");
-            Columns.Add("NavPL*");
+            Columns.Add("Price");
             Columns.Add("Currency");
             Columns.Add("Country");
-
-            RowLookup.TryAdd("key_111", new RowModel("key_111", new object[] { "IBM", 10000, 123.456, "USD", "USA" }));
-            RowLookup.TryAdd("key_222", new RowModel("key_222", new object[] { "DELL", 18800, 18823.456, "USD", "USA" }));
-            RowLookup.TryAdd("key_333", new RowModel("key_333", new object[] { "VOD LN", 66000, 14423.456, "GBP", "UK" }));
+            
+            for (int i=0; i<300; i++)
+            {
+                AddRow();
+            }
         }
 
-        public RowModel Tick()
+        public List<RowModel> Tick()
         {
-            var index = new Random().Next(Rows.Count);
             var volumeIndex = Columns.IndexOf("Volume");
-            var key = new List<string>(RowLookup.Keys)[index];
+            var priceIndex = Columns.IndexOf("Price");
+            var symbolIndex = Columns.IndexOf("Symbol");
 
-            RowLookup[key].values[volumeIndex] = (int)(RowLookup[key].values[volumeIndex]) + 20;
-            return RowLookup[key];
+            var rows = new List<RowModel>(RowLookup.Values);
+            var symbol = rows[_random.Next(Rows.Count)].values[symbolIndex];
+            var rowsToTick = rows.FindAll(o => o.values[symbolIndex] == symbol);
+            if (rowsToTick.Count == 0)
+            {
+                return rowsToTick;
+            }
+
+            var newVol = (int)(rowsToTick[0].values[volumeIndex]) + 20;
+            var newPrc = (decimal)(rowsToTick[0].values[priceIndex]) + (decimal)(_random.Next(0, 10) - 5) / 100m;
+
+            foreach (var row in rowsToTick)
+            {
+                row.values[volumeIndex] = newVol;
+                row.values[priceIndex] = newPrc;
+            }
+            return rowsToTick;
+        }
+
+        private string RandomSymbol()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var symbol = "";
+            for (int i = 0; i < 3; i++)
+            {
+                symbol += chars[_random.Next(chars.Length)];
+            }
+            return symbol;
         }
 
         public RowModel AddRow()
         {
             var guid = Guid.NewGuid().ToString();
-            RowModel newRow = new RowModel(guid, new object[] { "FOO", 66000, 14423.456, "CAD", "CAN" });
+            RowModel newRow = new RowModel(guid, new object[] {
+                _secMaster[_random.Next(0, _secMaster.Count)],
+                _random.Next(11,550)*100,
+                _random.Next(10, 5000) / 100m,
+                "USD",
+                "USA" });
             RowLookup.TryAdd(guid.ToString(), newRow);
             return newRow;
         }
