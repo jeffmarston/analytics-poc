@@ -43,7 +43,7 @@
         </member>
         <member name="T:Wask.Lib.SignalR.AnalyticsController">
             <summary>
-            Service Info OWIN Controller
+            "Views" OWIN Controller
             </summary>
         </member>
         <member name="M:Wask.Lib.SignalR.AnalyticsController.CreateView(System.String)">

@@ -32,13 +32,13 @@ namespace Wask.Lib
         {
             var config = new HttpConfiguration();
 
+            // Force REST objects to be camelCase, not PascalCase
             var defaultSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters = new List<JsonConverter> { new StringEnumConverter { CamelCaseText = true } }
             };
-
             JsonConvert.DefaultSettings = () => { return defaultSettings; };
             config.Formatters.Clear();
             config.Formatters.Add(new JsonMediaTypeFormatter());
@@ -51,15 +51,14 @@ namespace Wask.Lib
                 );
 
             config.MapHttpAttributeRoutes();
-
+            
+            // Add Swagger documentaion
             config.EnableSwagger(c => {
                 //c.InjectStylesheet(containingAssembly, "Swashbuckle.Dummy.SwaggerExtensions.testStyles1.css");
                 var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
                 var commentsFile = Path.Combine(baseDirectory, commentsFileName);
-
                 c.IncludeXmlComments(commentsFile);
-
                 c.SingleApiVersion("v1","API Documentation");       
             }).EnableSwaggerUi();
 

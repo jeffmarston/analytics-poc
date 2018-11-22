@@ -6,6 +6,10 @@ namespace Wask.Lib.Model
 {
     public class ViewModel
     {
+        private const int Initial_Rows = 300;
+        private const int Sec_Master_Size = 80;
+
+
         private Random _random = new Random();
         private List<string> _secMaster = new List<string>();
 
@@ -22,7 +26,7 @@ namespace Wask.Lib.Model
         {
             Columns = new List<string>();
             RowLookup = new ConcurrentDictionary<string, RowModel>();
-            for (int i=0; i<20; i++)
+            for (int i=0; i< Sec_Master_Size; i++)
             {
                 _secMaster.Add(RandomSymbol());
             }
@@ -38,7 +42,7 @@ namespace Wask.Lib.Model
             Columns.Add("Currency");
             Columns.Add("Country");
             
-            for (int i=0; i<300; i++)
+            for (int i=0; i< Initial_Rows; i++)
             {
                 AddRow();
             }

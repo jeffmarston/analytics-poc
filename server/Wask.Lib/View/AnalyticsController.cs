@@ -5,7 +5,7 @@ using Wask.Lib.Model;
 namespace Wask.Lib.SignalR
 {
     /// <summary>
-    /// Service Info OWIN Controller
+    /// "Views" OWIN Controller
     /// </summary>
     [RoutePrefix(Constants.ViewChannel)]
     public class AnalyticsController : ApiController
